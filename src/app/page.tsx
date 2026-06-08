@@ -37,7 +37,7 @@ export default function Home() {
               className="w-full flex flex-col items-center z-10"
             >
               <motion.div variants={fadeInUp} className="inline-block mb-5 px-3 py-1 rounded-full glass-panel text-xs font-bold text-blue-400 border border-blue-400/20">
-                簿記3級を最短合格するための学習アプリ、リリースします！
+                簿記3級を最短合格するための学習アプリ
               </motion.div>
               <motion.h1 variants={fadeInUp} className="text-3xl font-black leading-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
                 簿記3級、スマホ1台で<br/>合格する時代へ。
