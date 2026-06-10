@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Download, BookOpen, Clock, Smartphone, Smile } from "lucide-react";
+import { Download, BookOpen, Clock, Smartphone, Smile, Volume2, VolumeX } from "lucide-react";
 import { Variants } from "framer-motion";
 
 const fadeInUp: Variants = {
@@ -18,6 +19,34 @@ const staggerContainer: Variants = {
 };
 
 export default function Home() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // クライアントサイドでのみ Audio インスタンスを作成
+    const audio = new Audio("/bgm/bgm4.aac");
+    audio.loop = true;
+    audioRef.current = audio;
+
+    // コンポーネントのアンマウント時に停止
+    return () => {
+      audio.pause();
+    };
+  }, []);
+
+  const toggleBGM = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch((err) => {
+        console.error("Audio playback failed:", err);
+      });
+      setIsPlaying(true);
+    }
+  };
+
   return (
     <main className="min-h-screen text-slate-100 bg-[#060814] flex justify-center items-start md:py-10">
       
@@ -239,6 +268,40 @@ export default function Home() {
             <p className="text-slate-500">&copy; 2026 Nexus Accounting Office. All rights reserved.</p>
           </footer>
         </div>
+
+        {/* BGMコントロールボタン */}
+        <div className="absolute bottom-6 right-6 z-50">
+          <motion.button
+            onClick={toggleBGM}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className={`w-12 h-12 rounded-full flex items-center justify-center border shadow-lg backdrop-blur-md transition-all duration-300 ${
+              isPlaying
+                ? "bg-orange-500/20 border-orange-500/40 text-orange-400 shadow-orange-500/10"
+                : "bg-slate-900/60 border-slate-700/60 text-slate-400 shadow-black/40"
+            }`}
+            aria-label="BGMを切り替え"
+          >
+            {isPlaying ? (
+              <motion.div
+                animate={{
+                  scale: [1, 1.15, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="flex items-center justify-center"
+              >
+                <Volume2 size={20} />
+              </motion.div>
+            ) : (
+              <VolumeX size={20} />
+            )}
+          </motion.button>
+        </div>
+
       </div>
     </main>
   );
