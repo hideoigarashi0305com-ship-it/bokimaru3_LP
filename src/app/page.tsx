@@ -270,7 +270,7 @@ export default function Home() {
         </div>
 
         {/* BGMコントロールボタン */}
-        <div className="absolute bottom-6 right-6 z-50">
+        <div className="absolute top-6 right-6 z-50">
           <motion.button
             onClick={toggleBGM}
             whileHover={{ scale: 1.1 }}
