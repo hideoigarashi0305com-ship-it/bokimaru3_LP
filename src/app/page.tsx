@@ -77,7 +77,7 @@ export default function Home() {
               <motion.div variants={fadeInUp} className="w-full max-w-xs mb-8">
                 <a href="https://play.google.com/store/apps/details?id=com.nexusaccounting.bokimaru&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="cta-button group flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
                   <Download size={22} />
-                  <span>無料でインストール</span>
+                  <span>Google Play で無料インストール</span>
                 </a>
               </motion.div>
             </motion.div>
