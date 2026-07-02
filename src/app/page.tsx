@@ -75,7 +75,7 @@ export default function Home() {
                 参考書も、電卓も、答案用紙も──<br/>ぜんぶ、このアプリの中にあります。<br/>現役税理士が完全監修した、<br/>AI搭載の次世代型簿記アプリ<br/>「ボキまる先生」。
               </motion.p>
               <motion.div variants={fadeInUp} className="w-full max-w-xs mb-8">
-                <a href="#install" className="cta-button group flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
+                <a href="https://play.google.com/store/apps/details?id=com.nexusaccounting.bokimaru&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="cta-button group flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
                   <Download size={22} />
                   <span>無料でインストール</span>
                 </a>
@@ -253,7 +253,7 @@ export default function Home() {
                   現役税理士率いる<br/>ネクサス会計事務所のスタッフが、<br/>そんな想いから開発しました。<br/>ダウンロードした瞬間から、<br/>うさぴょんたちと一緒に<br/>合格への一歩を踏み出しましょう！
                 </p>
                 
-                <a href="#install" className="cta-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
+                <a href="https://play.google.com/store/apps/details?id=com.nexusaccounting.bokimaru&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="cta-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
                   <Download size={22} />
                   <span>Google Play で無料インストール</span>
                 </a>
