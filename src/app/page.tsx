@@ -65,16 +65,16 @@ export default function Home() {
               initial="hidden" animate="visible" variants={staggerContainer}
               className="w-full flex flex-col items-center z-10"
             >
-              <motion.div variants={fadeInUp} className="inline-block mb-2 px-2.5 py-0.5 rounded bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-wider border border-red-500/20">
+              <motion.div variants={fadeInUp} className="inline-block mb-2 px-3 py-1 rounded bg-red-500/10 text-red-400 text-xs font-black uppercase tracking-wider border border-red-500/20">
                 2026年試験対応
               </motion.div>
-              <motion.div variants={fadeInUp} className="inline-block mb-5 px-3 py-1 rounded-full glass-panel text-xs font-bold text-blue-400 border border-blue-400/20">
+              <motion.div variants={fadeInUp} className="inline-block mb-6 px-4 py-1.5 rounded-full glass-panel text-sm font-bold text-blue-400 border border-blue-400/20">
                 簿記3級を最短合格するための学習アプリ
               </motion.div>
-              <motion.h1 variants={fadeInUp} className="text-3xl font-black leading-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
+              <motion.h1 variants={fadeInUp} className="text-[34px] font-black leading-tight mb-5 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300">
                 簿記3級、スマホ1台で<br/>合格する時代へ。
               </motion.h1>
-              <motion.p variants={fadeInUp} className="text-sm text-slate-300 mb-6 leading-relaxed max-w-sm">
+              <motion.p variants={fadeInUp} className="text-base text-slate-300 mb-8 leading-relaxed max-w-sm">
                 参考書も、電卓も、答案用紙も──<br/>ぜんぶ、このアプリの中にあります。<br/>現役税理士が完全監修した、<br/>AI搭載の次世代型簿記アプリ<br/>「ボキまる先生」。
               </motion.p>
               <motion.div variants={fadeInUp} className="w-full max-w-xs mb-8">
