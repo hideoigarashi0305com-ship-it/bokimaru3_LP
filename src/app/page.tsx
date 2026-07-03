@@ -65,6 +65,9 @@ export default function Home() {
               initial="hidden" animate="visible" variants={staggerContainer}
               className="w-full flex flex-col items-center z-10"
             >
+              <motion.div variants={fadeInUp} className="inline-block mb-2 px-2.5 py-0.5 rounded bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-wider border border-red-500/20">
+                2026年試験対応
+              </motion.div>
               <motion.div variants={fadeInUp} className="inline-block mb-5 px-3 py-1 rounded-full glass-panel text-xs font-bold text-blue-400 border border-blue-400/20">
                 簿記3級を最短合格するための学習アプリ
               </motion.div>
