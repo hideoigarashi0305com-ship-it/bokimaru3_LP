@@ -260,6 +260,18 @@ export default function Home() {
                   <Download size={22} />
                   <span>Google Play で無料インストール</span>
                 </a>
+
+                <div className="mt-6 flex justify-center">
+                  <a 
+                    href="https://note.com/prime_snail8275/n/n1bf45b2f2eb3?sub_rt=share_sb" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-slate-800/80 bg-slate-900/40 hover:bg-slate-800/60 text-slate-400 hover:text-slate-200 transition-all text-xs font-semibold backdrop-blur-sm shadow-sm"
+                  >
+                    <BookOpen size={14} />
+                    <span>ボキまる制作記（note）</span>
+                  </a>
+                </div>
               </motion.div>
             </div>
           </section>
