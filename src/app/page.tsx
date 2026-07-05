@@ -230,7 +230,7 @@ export default function Home() {
             <div className="w-full">
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="glass-panel p-6 rounded-2xl border border-blue-500/20 text-center relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"></div>
-                <div className="inline-block bg-red-500 text-white font-bold px-4 py-1.5 rounded-full mb-6 shadow-md shadow-red-500/10 text-xs">
+                <div className="inline-block bg-red-500 text-white font-bold px-3.5 py-1 rounded-full mb-6 shadow-md shadow-red-500/10 text-[11px] whitespace-nowrap">
                   🔥 リリース記念限定価格【2026年8月31日まで】
                 </div>
                 <h2 className="text-xl font-bold mb-3 text-white">今だけ、すべての機能が<br/>「一生使い放題」</h2>
