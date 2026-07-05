@@ -237,13 +237,14 @@ export default function Home() {
                 <p className="text-slate-300 text-xs leading-relaxed mb-6">
                   毎月お金がかかるサブスクではありません。<br/>一度の購入でずっと使える<br/>「買い切り」プランです。
                 </p>
-                <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 mb-4 drop-shadow-sm">
+                <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 mb-3 drop-shadow-sm">
                   500<span className="text-lg text-slate-400 ml-1">円</span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  （ワンコイン）<br/>
-                  この期間を過ぎると<br/>通常価格に戻ります。<br/>
-                  ※海外在住の方も現地の<br/>Googleアカウントから<br/>そのままご購入いただけます
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  （ワンコイン）
+                </p>
+                <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                  ※この期間を過ぎると通常価格に戻ります。
                 </p>
               </motion.div>
             </div>
