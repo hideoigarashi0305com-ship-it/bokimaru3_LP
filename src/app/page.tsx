@@ -240,10 +240,7 @@ export default function Home() {
                 <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 mb-3 drop-shadow-sm">
                   500<span className="text-lg text-slate-400 ml-1">円</span>
                 </div>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  （ワンコイン）
-                </p>
-                <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                   ※この期間を過ぎると通常価格に戻ります。
                 </p>
               </motion.div>
