@@ -82,7 +82,7 @@ export default function Home() {
                   <Download size={22} />
                   <span>Google Play で無料インストール</span>
                 </a>
-                <a href="https://bokimaru3.pages.dev/" target="_blank" rel="noopener noreferrer" className="cta-button-web group flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
+                <a href="https://bokimarusenseiboki3.com/" target="_blank" rel="noopener noreferrer" className="cta-button-web group flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
                   <Globe size={22} />
                   <span>Webで無料インストール</span>
                 </a>
@@ -263,7 +263,7 @@ export default function Home() {
                     <Download size={22} />
                     <span>Google Play で無料インストール</span>
                   </a>
-                  <a href="https://bokimaru3.pages.dev/" target="_blank" rel="noopener noreferrer" className="cta-button-web inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
+                  <a href="https://bokimarusenseiboki3.com/" target="_blank" rel="noopener noreferrer" className="cta-button-web inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
                     <Globe size={22} />
                     <span>Webで無料インストール</span>
                   </a>
