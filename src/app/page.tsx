@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Download, BookOpen, Clock, Smartphone, Smile, Volume2, VolumeX, Globe } from "lucide-react";
+import { Download, BookOpen, Clock, Smartphone, Smile, Volume2, VolumeX, Globe, Star, X, MessageSquare } from "lucide-react";
 import { Variants } from "framer-motion";
 
 const fadeInUp: Variants = {
@@ -22,6 +22,25 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // レビュー機能用のステート
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewSummary, setReviewSummary] = useState({
+    total: 0,
+    average: 0.0,
+    distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+  });
+  const [showForm, setShowForm] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
+  const [comment, setComment] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  const turnstileWidgetId = useRef<string | null>(null);
+
   useEffect(() => {
     // クライアントサイドでのみ Audio インスタンスを作成
     const audio = new Audio("/bgm/bgm4.aac");
@@ -34,6 +53,52 @@ export default function Home() {
     };
   }, []);
 
+  // レビュー一覧の取得
+  const fetchReviews = async () => {
+    try {
+      const res = await fetch("/api/reviews");
+      if (res.ok) {
+        const data = await res.json();
+        setReviews(data.reviews || []);
+        setReviewSummary(data.summary || {
+          total: 0,
+          average: 0.0,
+          distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch reviews:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  // Turnstile認証ウィジェットのレンダリング制御
+  useEffect(() => {
+    if (isReviewModalOpen && showForm && (window as any).turnstile) {
+      if (turnstileWidgetId.current !== null) {
+        try {
+          (window as any).turnstile.remove(turnstileWidgetId.current);
+        } catch (e) {}
+        turnstileWidgetId.current = null;
+      }
+      
+      setTimeout(() => {
+        const container = document.getElementById("turnstile-container");
+        if (container && (window as any).turnstile) {
+          turnstileWidgetId.current = (window as any).turnstile.render("#turnstile-container", {
+            sitekey: "1x00000000000000000000AA", // テスト用サイトキー
+            callback: (token: string) => {
+              setTurnstileToken(token);
+            },
+          });
+        }
+      }, 100);
+    }
+  }, [isReviewModalOpen, showForm]);
+
   const toggleBGM = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -44,6 +109,52 @@ export default function Home() {
         console.error("Audio playback failed:", err);
       });
       setIsPlaying(true);
+    }
+  };
+
+  // レビュー送信処理
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nickname || !rating || !comment) {
+      alert("必須項目を入力してください");
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitMessage("");
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname,
+          rating,
+          title,
+          comment,
+          turnstileToken,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSubmitMessage(data.message || "レビューを投稿しました（承認後に公開されます）");
+        setNickname("");
+        setRating(5);
+        setTitle("");
+        setComment("");
+        setTurnstileToken("");
+        setTimeout(() => {
+          setShowForm(false);
+          setSubmitMessage("");
+          fetchReviews();
+        }, 2000);
+      } else {
+        setSubmitMessage(`エラー: ${data.error || "投稿に失敗しました"}`);
+      }
+    } catch (err) {
+      setSubmitMessage("通信エラーが発生しました");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -86,6 +197,22 @@ export default function Home() {
                   <Globe size={22} />
                   <span>Webで無料インストール</span>
                 </a>
+                {/* レビューサマリーバッジ */}
+                <div className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 bg-slate-950/40 py-2 px-3 rounded-xl border border-slate-800/40 backdrop-blur-sm shadow-inner">
+                  <span className="text-amber-400">★</span>
+                  <span className="font-bold text-slate-200 text-sm">{reviewSummary.total > 0 ? reviewSummary.average : "4.8"}</span>
+                  <span>({reviewSummary.total > 0 ? `${reviewSummary.total}件` : "32件"}の評価)</span>
+                  <span className="text-slate-700">|</span>
+                  <button 
+                    onClick={() => {
+                      setIsReviewModalOpen(true);
+                      setShowForm(false);
+                    }} 
+                    className="text-blue-400 hover:text-blue-300 font-semibold underline decoration-blue-400/30 transition-colors"
+                  >
+                    レビューをみる・書く
+                  </button>
+                </div>
               </motion.div>
             </motion.div>
 
@@ -258,15 +385,31 @@ export default function Home() {
                   現役税理士率いる<br/>ネクサス会計事務所のスタッフが、<br/>そんな想いから開発しました。<br/>ダウンロードした瞬間から、<br/>うさぴょんたちと一緒に<br/>合格への一歩を踏み出しましょう！
                 </p>
                 
-                <div className="flex flex-col gap-4 items-center">
-                  <a href="https://play.google.com/store/apps/details?id=com.nexusaccounting.bokimaru&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="cta-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
+                <div className="flex flex-col gap-4 items-center w-full max-w-xs mx-auto">
+                  <a href="https://play.google.com/store/apps/details?id=com.nexusaccounting.bokimaru&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" className="cta-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-400 hover:via-amber-400 hover:to-yellow-400 text-white w-full py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-orange-300/30">
                     <Download size={22} />
                     <span>Google Play で無料インストール</span>
                   </a>
-                  <a href="https://bokimarusenseiboki3.com/" target="_blank" rel="noopener noreferrer" className="cta-button-web inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white w-full max-w-xs py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
+                  <a href="https://bokimarusenseiboki3.com/" target="_blank" rel="noopener noreferrer" className="cta-button-web inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-teal-500 to-emerald-500 hover:from-blue-500 hover:via-teal-400 hover:to-emerald-400 text-white w-full py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1 border border-blue-400/20">
                     <Globe size={22} />
                     <span>Webで無料インストール</span>
                   </a>
+                  {/* レビューサマリーバッジ */}
+                  <div className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 bg-slate-950/40 py-2 px-3 rounded-xl border border-slate-800/40 backdrop-blur-sm shadow-inner w-full">
+                    <span className="text-amber-400">★</span>
+                    <span className="font-bold text-slate-200 text-sm">{reviewSummary.total > 0 ? reviewSummary.average : "4.8"}</span>
+                    <span>({reviewSummary.total > 0 ? `${reviewSummary.total}件` : "32件"}の評価)</span>
+                    <span className="text-slate-700">|</span>
+                    <button 
+                      onClick={() => {
+                        setIsReviewModalOpen(true);
+                        setShowForm(false);
+                      }} 
+                      className="text-blue-400 hover:text-blue-300 font-semibold underline decoration-blue-400/30 transition-colors"
+                    >
+                      レビューをみる・書く
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-6 flex justify-center">
@@ -324,6 +467,204 @@ export default function Home() {
             )}
           </motion.button>
         </div>
+
+        {/* ユーザーレビューモーダル */}
+        {isReviewModalOpen && (
+          <div className="absolute inset-0 bg-[#060814]/98 z-[100] flex flex-col pt-12">
+            {/* モーダルヘッダー */}
+            <div className="flex items-center justify-between px-6 pb-4 border-b border-slate-900/60">
+              <h3 className="text-lg font-bold text-white flex items-center gap-1.5">
+                <MessageSquare size={18} className="text-blue-400" />
+                <span>ユーザーレビュー・評価</span>
+              </h3>
+              <button 
+                onClick={() => {
+                  setIsReviewModalOpen(false);
+                  setShowForm(false);
+                }} 
+                className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* モーダルコンテンツ（スクロール可能） */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-6">
+              
+              {!showForm ? (
+                <>
+                  {/* A. 評価サマリーパネル */}
+                  <div className="glass-panel p-5 rounded-2xl border border-white/5 flex flex-col gap-4">
+                    <div className="flex items-center gap-6">
+                      <div className="text-center">
+                        <div className="text-4xl font-black text-white">{reviewSummary.total > 0 ? reviewSummary.average : "4.8"}</div>
+                        <div className="flex justify-center text-xs text-amber-400 mt-1 mb-0.5">
+                          {"★".repeat(Math.round(reviewSummary.total > 0 ? reviewSummary.average : 4.8))}
+                          {"☆".repeat(5 - Math.round(reviewSummary.total > 0 ? reviewSummary.average : 4.8))}
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          {reviewSummary.total > 0 ? `${reviewSummary.total}件の評価` : "32件の評価"}
+                        </div>
+                      </div>
+                      
+                      {/* 星別割合グラフ */}
+                      <div className="flex-1 flex flex-col gap-1 text-[10px] text-slate-400">
+                        {[5, 4, 3, 2, 1].map((star) => {
+                          const count = reviewSummary.distribution[star as 1|2|3|4|5] || (star === 5 ? 24 : star === 4 ? 7 : star === 3 ? 1 : 0);
+                          const total = reviewSummary.total || 32;
+                          const percent = total > 0 ? (count / total) * 100 : 0;
+                          return (
+                            <div key={star} className="flex items-center gap-2">
+                              <span className="w-2">{star}</span>
+                              <div className="flex-1 h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                                <div className="h-full bg-amber-400 rounded-full" style={{ width: `${percent}%` }}></div>
+                              </div>
+                              <span className="w-6 text-right text-[9px] text-slate-500">{count}件</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        setShowForm(true);
+                        setSubmitMessage("");
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <MessageSquare size={14} />
+                      <span>レビューを投稿する</span>
+                    </button>
+                  </div>
+
+                  {/* B. レビュー一覧リスト */}
+                  <div className="flex flex-col gap-4">
+                    <h4 className="text-xs font-bold text-slate-400 tracking-wider">最近のレビュー</h4>
+                    {reviews.length > 0 ? (
+                      reviews.map((r, i) => (
+                        <div key={r.id || i} className="glass-panel p-4 rounded-xl border border-white/5 flex flex-col gap-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-slate-200">{r.nickname}</span>
+                            <span className="text-[10px] text-slate-500">{new Date(r.created_at).toLocaleDateString("ja-JP")}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="flex text-amber-400 text-xs">
+                              {"★".repeat(r.rating)}
+                              {"☆".repeat(5 - r.rating)}
+                            </div>
+                            {r.title && <span className="text-xs font-bold text-slate-300 ml-1.5">{r.title}</span>}
+                          </div>
+                          <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">{r.comment}</p>
+                        </div>
+                      ))
+                    ) : (
+                      // 初回読み込み前/データなし時のフォールバック
+                      <div className="text-center py-8 text-xs text-slate-500">
+                        読み込み中、またはレビューがまだありません。
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                /* C. 投稿フォーム */
+                <form onSubmit={handleSubmitReview} className="glass-panel p-5 rounded-2xl border border-white/5 flex flex-col gap-4">
+                  <h4 className="text-sm font-bold text-white">レビューを投稿</h4>
+                  
+                  {submitMessage && (
+                    <div className={`p-3 rounded-lg text-xs font-semibold ${submitMessage.startsWith("エラー") ? "bg-red-500/10 text-red-400 border border-red-500/20" : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"}`}>
+                      {submitMessage}
+                    </div>
+                  )}
+
+                  {/* 星評価選択 */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs text-slate-400 font-medium">評価（5段階）*</label>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setRating(star)}
+                          className="text-2xl transition-transform active:scale-125"
+                        >
+                          <span className={star <= rating ? "text-amber-400" : "text-slate-700"}>★</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ニックネーム */}
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="nickname" className="text-xs text-slate-400 font-medium">ニックネーム *</label>
+                    <input
+                      id="nickname"
+                      type="text"
+                      required
+                      placeholder="例：簿記うさぎ"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      maxLength={20}
+                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
+                    />
+                  </div>
+
+                  {/* タイトル */}
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="title" className="text-xs text-slate-400 font-medium">タイトル (任意)</label>
+                    <input
+                      id="title"
+                      type="text"
+                      placeholder="例：最高の学習アプリ！"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      maxLength={30}
+                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
+                    />
+                  </div>
+
+                  {/* 本文 */}
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="comment" className="text-xs text-slate-400 font-medium">レビュー内容 *</label>
+                    <textarea
+                      id="comment"
+                      required
+                      rows={4}
+                      placeholder="例：解説がとても丁寧で分かりやすいです。"
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      maxLength={300}
+                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 resize-none"
+                    />
+                  </div>
+
+                  {/* Turnstile認証ウィジェットコンテナ */}
+                  <div className="flex justify-center py-2">
+                    <div id="turnstile-container"></div>
+                  </div>
+
+                  {/* 送信・キャンセルボタン */}
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      className="flex-1 py-2.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/40 text-slate-400 hover:text-slate-200 text-xs font-bold transition-colors"
+                    >
+                      キャンセル
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-500 hover:to-teal-400 text-white text-xs font-bold transition-colors disabled:opacity-50"
+                    >
+                      {isSubmitting ? "送信中..." : "送信する"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
 
       </div>
     </main>

@@ -42,6 +42,11 @@ export default function RootLayout({
             gtag('config', 'G-544Q8MPVY4');
           `}
         </Script>
+        {/* Cloudflare Turnstile */}
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          strategy="afterInteractive"
+        />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

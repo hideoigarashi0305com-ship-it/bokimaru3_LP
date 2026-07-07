@@ -1,0 +1,9 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "bokimaru-next-lp"
+compatibility_date = "2026-06-01"
+pages_build_output_dir = "out"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bokimaru-reviews"
+database_id = "00000000-0000-0000-0000-000000000000" # ローカル確認用ダミー。本番作成後にユーザー自身の実績IDに差し替えていただきます。
