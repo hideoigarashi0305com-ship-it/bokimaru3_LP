@@ -73,6 +73,18 @@ export default function Home() {
     fetchReviews();
   }, []);
 
+  // モーダル表示中の背景スクロール制御
+  useEffect(() => {
+    if (isReviewModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isReviewModalOpen]);
+
   const toggleBGM = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -426,7 +438,7 @@ export default function Home() {
 
         {/* ユーザーレビューモーダル */}
         {isReviewModalOpen && (
-          <div className="absolute inset-0 bg-[#060814]/98 z-[100] flex flex-col pt-12">
+          <div className="fixed inset-x-0 bottom-0 top-0 md:top-10 md:bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] md:max-w-[410px] md:rounded-[32px] bg-[#060814]/98 z-[100] flex flex-col pt-8 md:pt-6 shadow-2xl border border-white/5 overflow-hidden">
             {/* モーダルヘッダー */}
             <div className="flex items-center justify-between px-6 pb-4 border-b border-slate-900/60">
               <h3 className="text-lg font-bold text-white flex items-center gap-1.5">
