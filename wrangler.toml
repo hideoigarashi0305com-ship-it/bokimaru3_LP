@@ -6,4 +6,4 @@ pages_build_output_dir = "out"
 [[d1_databases]]
 binding = "DB"
 database_name = "bokimaru-reviews"
-database_id = "00000000-0000-0000-0000-000000000000" # ローカル確認用ダミー。本番作成後にユーザー自身の実績IDに差し替えていただきます。
+database_id = "ecb72992-54fe-4cc8-af1b-49615381691f"
