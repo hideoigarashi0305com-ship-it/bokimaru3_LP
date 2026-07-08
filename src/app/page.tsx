@@ -37,6 +37,7 @@ export default function Home() {
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [visibleCount, setVisibleCount] = useState(10); // 初期表示10件
 
   useEffect(() => {
     // クライアントサイドでのみ Audio インスタンスを作成
@@ -436,6 +437,7 @@ export default function Home() {
                 onClick={() => {
                   setIsReviewModalOpen(false);
                   setShowForm(false);
+                  setVisibleCount(10); // 10件にリセット
                 }} 
                 className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
               >
@@ -497,22 +499,33 @@ export default function Home() {
                   <div className="flex flex-col gap-4">
                     <h4 className="text-xs font-bold text-slate-400 tracking-wider">最近のレビュー</h4>
                     {reviews.length > 0 ? (
-                      reviews.map((r, i) => (
-                        <div key={r.id || i} className="glass-panel p-4 rounded-xl border border-white/5 flex flex-col gap-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-200">{r.nickname}</span>
-                            <span className="text-[10px] text-slate-500">{new Date(r.created_at).toLocaleDateString("ja-JP")}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <div className="flex text-amber-400 text-xs">
-                              {"★".repeat(r.rating)}
-                              {"☆".repeat(5 - r.rating)}
+                      <>
+                        {reviews.slice(0, visibleCount).map((r, i) => (
+                          <div key={r.id || i} className="glass-panel p-4 rounded-xl border border-white/5 flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-200">{r.nickname}</span>
+                              <span className="text-[10px] text-slate-500">{new Date(r.created_at).toLocaleDateString("ja-JP")}</span>
                             </div>
-                            {r.title && <span className="text-xs font-bold text-slate-300 ml-1.5">{r.title}</span>}
+                            <div className="flex items-center gap-1">
+                              <div className="flex text-amber-400 text-xs">
+                                {"★".repeat(r.rating)}
+                                {"☆".repeat(5 - r.rating)}
+                              </div>
+                              {r.title && <span className="text-xs font-bold text-slate-300 ml-1.5">{r.title}</span>}
+                            </div>
+                            <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">{r.comment}</p>
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">{r.comment}</p>
-                        </div>
-                      ))
+                        ))}
+                        {reviews.length > visibleCount && (
+                          <button
+                            type="button"
+                            onClick={() => setVisibleCount(reviews.length)}
+                            className="w-full py-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-800/40 text-slate-400 hover:text-slate-200 text-xs font-bold transition-colors mt-2"
+                          >
+                            レビューをもっと見る ({reviews.length - visibleCount}件)
+                          </button>
+                        )}
+                      </>
                     ) : (
                       // 初回読み込み前/データなし時のフォールバック
                       <div className="text-center py-8 text-xs text-slate-500">
@@ -550,7 +563,7 @@ export default function Home() {
                   </div>
 
                   {/* ニックネーム */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 w-full">
                     <label htmlFor="nickname" className="text-xs text-slate-400 font-medium">ニックネーム *</label>
                     <input
                       id="nickname"
@@ -560,12 +573,12 @@ export default function Home() {
                       value={nickname}
                       onChange={(e) => setNickname(e.target.value)}
                       maxLength={20}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
+                      className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
                     />
                   </div>
 
                   {/* タイトル */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 w-full">
                     <label htmlFor="title" className="text-xs text-slate-400 font-medium">タイトル (任意)</label>
                     <input
                       id="title"
@@ -574,12 +587,12 @@ export default function Home() {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       maxLength={30}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
+                      className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50"
                     />
                   </div>
 
                   {/* 本文 */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5 w-full">
                     <label htmlFor="comment" className="text-xs text-slate-400 font-medium">レビュー内容 *</label>
                     <textarea
                       id="comment"
@@ -589,7 +602,7 @@ export default function Home() {
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       maxLength={300}
-                      className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 resize-none"
+                      className="w-full bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 resize-none"
                     />
                   </div>
 
