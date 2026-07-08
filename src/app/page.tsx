@@ -35,11 +35,8 @@ export default function Home() {
   const [rating, setRating] = useState(5);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
-
-  const turnstileWidgetId = useRef<string | null>(null);
 
   useEffect(() => {
     // クライアントサイドでのみ Audio インスタンスを作成
@@ -75,30 +72,6 @@ export default function Home() {
     fetchReviews();
   }, []);
 
-  // Turnstile認証ウィジェットのレンダリング制御
-  useEffect(() => {
-    if (isReviewModalOpen && showForm && (window as any).turnstile) {
-      if (turnstileWidgetId.current !== null) {
-        try {
-          (window as any).turnstile.remove(turnstileWidgetId.current);
-        } catch (e) {}
-        turnstileWidgetId.current = null;
-      }
-      
-      setTimeout(() => {
-        const container = document.getElementById("turnstile-container");
-        if (container && (window as any).turnstile) {
-          turnstileWidgetId.current = (window as any).turnstile.render("#turnstile-container", {
-            sitekey: "1x00000000000000000000AA", // テスト用サイトキー
-            callback: (token: string) => {
-              setTurnstileToken(token);
-            },
-          });
-        }
-      }, 100);
-    }
-  }, [isReviewModalOpen, showForm]);
-
   const toggleBGM = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -132,7 +105,6 @@ export default function Home() {
           rating,
           title,
           comment,
-          turnstileToken,
         }),
       });
       const data = await res.json();
@@ -142,7 +114,6 @@ export default function Home() {
         setRating(5);
         setTitle("");
         setComment("");
-        setTurnstileToken("");
         setTimeout(() => {
           setShowForm(false);
           setSubmitMessage("");
@@ -394,22 +365,6 @@ export default function Home() {
                     <Globe size={22} />
                     <span>Webで無料インストール</span>
                   </a>
-                  {/* レビューサマリーバッジ */}
-                  <div className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400 bg-slate-950/40 py-2 px-3 rounded-xl border border-slate-800/40 backdrop-blur-sm shadow-inner w-full">
-                    <span className="text-amber-400">★</span>
-                    <span className="font-bold text-slate-200 text-sm">{reviewSummary.total > 0 ? reviewSummary.average : "4.8"}</span>
-                    <span>({reviewSummary.total > 0 ? `${reviewSummary.total}件` : "32件"}の評価)</span>
-                    <span className="text-slate-700">|</span>
-                    <button 
-                      onClick={() => {
-                        setIsReviewModalOpen(true);
-                        setShowForm(false);
-                      }} 
-                      className="text-blue-400 hover:text-blue-300 font-semibold underline decoration-blue-400/30 transition-colors"
-                    >
-                      レビューをみる・書く
-                    </button>
-                  </div>
                 </div>
 
                 <div className="mt-6 flex justify-center">
@@ -636,11 +591,6 @@ export default function Home() {
                       maxLength={300}
                       className="bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 resize-none"
                     />
-                  </div>
-
-                  {/* Turnstile認証ウィジェットコンテナ */}
-                  <div className="flex justify-center py-2">
-                    <div id="turnstile-container"></div>
                   </div>
 
                   {/* 送信・キャンセルボタン */}

@@ -62,7 +62,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const request = context.request;
     const body: any = await request.json();
     
-    const { nickname, rating, title, comment, turnstileToken } = body;
+    const { nickname, rating, title, comment } = body;
 
     // バリデーション
     if (!nickname || !rating || !comment) {
@@ -84,27 +84,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const adminSecret = request.headers.get("X-Admin-Secret");
     const isAdmin = adminSecret && context.env.ADMIN_SECRET && adminSecret === context.env.ADMIN_SECRET;
 
-    // 一般ユーザー投稿時のTurnstile認証チェック
-    if (!isAdmin) {
-      const secretKey = context.env.TURNSTILE_SECRET_KEY;
-      if (secretKey) {
-        if (!turnstileToken) {
-          return new Response(
-            JSON.stringify({ error: "認証トークンが不足しています" }),
-            { status: 400, headers: { "Content-Type": "application/json" } }
-          );
-        }
-        
-        const clientIp = request.headers.get("CF-Connecting-IP") || "";
-        const isHuman = await verifyTurnstile(turnstileToken, secretKey, clientIp);
-        if (!isHuman) {
-          return new Response(
-            JSON.stringify({ error: "Bot認証に失敗しました。もう一度お試しください。" }),
-            { status: 403, headers: { "Content-Type": "application/json" } }
-          );
-        }
-      }
-    }
+    // 一般ユーザー投稿時のTurnstile認証チェック（無効化）
 
     // データベース登録
     const reviewId = crypto.randomUUID();
@@ -152,22 +132,3 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 };
 
-// Cloudflare Turnstileのトークン検証ヘルパー
-async function verifyTurnstile(token: string, secretKey: string, ip: string): Promise<boolean> {
-  try {
-    const formData = new FormData();
-    formData.append("secret", secretKey);
-    formData.append("response", token);
-    formData.append("remoteip", ip);
-
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body: formData,
-    });
-    
-    const data: any = await res.json();
-    return !!data.success;
-  } catch {
-    return false;
-  }
-}
