@@ -382,7 +382,7 @@ export default function Home() {
 
                 <div className="mt-6 flex justify-center">
                   <a 
-                    href="https://note.com/prime_snail8275/n/n1bf45b2f2eb3?sub_rt=share_sb" 
+                    href="https://note.com/prime_snail8275/n/n46d7e6bf9fa0?sub_rt=share_sb" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-emerald-500/30 bg-emerald-950/25 hover:bg-emerald-950/45 text-emerald-400 hover:text-emerald-300 transition-all text-sm font-bold backdrop-blur-sm shadow-[0_0_15px_rgba(16,185,129,0.05)] hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
