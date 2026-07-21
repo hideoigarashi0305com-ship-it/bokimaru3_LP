@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Download, BookOpen, Clock, Smartphone, Smile, Volume2, VolumeX, Globe, Star, X, MessageSquare } from "lucide-react";
+import { Download, BookOpen, Clock, Smartphone, Smile, Volume2, VolumeX, Globe, Star, X, MessageSquare, ExternalLink } from "lucide-react";
 import { Variants } from "framer-motion";
 
 const fadeInUp: Variants = {
@@ -380,7 +380,7 @@ export default function Home() {
                   </a>
                 </div>
 
-                <div className="mt-6 flex justify-center">
+                <div className="mt-6 flex flex-col items-center gap-3">
                   <a 
                     href="https://note.com/prime_snail8275/n/n46d7e6bf9fa0?sub_rt=share_sb" 
                     target="_blank" 
@@ -389,6 +389,16 @@ export default function Home() {
                   >
                     <BookOpen size={16} />
                     <span>ボキまる制作記（note）</span>
+                  </a>
+
+                  <a 
+                    href="https://bokimaru2-lp.pages.dev" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-indigo-500/30 bg-indigo-950/25 hover:bg-indigo-950/45 text-indigo-400 hover:text-indigo-300 transition-all text-sm font-bold backdrop-blur-sm shadow-[0_0_15px_rgba(99,102,241,0.05)] hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
+                  >
+                    <ExternalLink size={16} />
+                    <span>ボキまる先生｜簿記2級</span>
                   </a>
                 </div>
               </motion.div>
