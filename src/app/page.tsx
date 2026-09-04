@@ -341,18 +341,18 @@ export default function Home() {
             <div className="w-full">
               <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="glass-panel p-6 rounded-2xl border border-blue-500/20 text-center relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"></div>
-                <div className="inline-block bg-red-500 text-white font-bold px-3.5 py-1 rounded-full mb-6 shadow-md shadow-red-500/10 text-[11px] whitespace-nowrap">
-                  🔥 リリース記念限定価格【2026年8月31日まで】
+                <div className="inline-block bg-blue-600/80 text-white font-bold px-4 py-1 rounded-full mb-6 shadow-md text-[11px] whitespace-nowrap border border-blue-400/30">
+                  💎 買い切りプレミアムプラン
                 </div>
-                <h2 className="text-xl font-bold mb-3 text-white">今だけ、すべての機能が<br/>「一生使い放題」</h2>
+                <h2 className="text-xl font-bold mb-3 text-white">すべての機能が<br/>「一生使い放題」</h2>
                 <p className="text-slate-300 text-xs leading-relaxed mb-6">
-                  毎月お金がかかるサブスクではありません。<br/>一度の購入でずっと使える<br/>「買い切り」プランです。
+                  毎月お金がかかるサブスクではありません。<br/>一度の購入でずっと使える<br/>安心の「買い切り」プランです。
                 </p>
                 <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 mb-3 drop-shadow-sm">
-                  500<span className="text-lg text-slate-400 ml-1">円</span>
+                  800<span className="text-lg text-slate-400 ml-1">円</span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  ※この期間を過ぎると通常価格に戻ります。
+                  ※追加課金・月額費用なしで全機能をご利用いただけます。
                 </p>
               </motion.div>
             </div>
